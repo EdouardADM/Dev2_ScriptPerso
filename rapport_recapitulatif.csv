@@ -1,0 +1,12 @@
+# Rapport Récapitulatif des Stocks
+Nombre total de produits : 17
+Quantité totale : 1377
+Valeur totale des stocks : 3071.80 €
+
+# Statistiques par catégorie
+Categorie,Quantite_totale,Valeur_totale
+boeuf,50,403.0
+fruit,480,776.45
+legume,675,858.25
+porc,95,634.85
+poulet,77,399.25

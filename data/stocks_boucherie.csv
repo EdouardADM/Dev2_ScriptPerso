@@ -1,9 +1,9 @@
 Nom du produit;Quantite;Prix;Categorie
-chipolata;50;5,99;porc
-filet americain;20;9,65;boeuf
-cordon bleu;20;10,28;porc
-cotelettes de porc;25;5,19;porc
+chipolata;50;5.99;porc
+filet americain;20;9.65;boeuf
+cordon bleu;20;10.28;porc
+cotelettes de porc;25;5.19;porc
 burger de boeuf;30;7;boeuf
-filet de poulet;35;4,75;poulet
-aiguillettes poulet;20;4,5;poulet
-escalope de poulet;22;6,5;poulet
+filet de poulet;35;4.75;poulet
+aiguillettes poulet;20;4.5;poulet
+escalope de poulet;22;6.5;poulet
