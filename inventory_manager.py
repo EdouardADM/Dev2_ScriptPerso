@@ -17,7 +17,8 @@ class InventoryManager:
                 raise FileNotFoundError(f"Le fichier '{file_path}' est introuvable.")
 
             try:
-                df = pd.read_csv(file_path)
+                # Lecture en forçant le délimiteur et en nettoyant les espaces
+                df = pd.read_csv(file_path, sep=";", encoding="utf-8")
                 loaded_data.append(df)
             except Exception as e:
                 raise ValueError(f"Erreur lors du chargement du fichier '{file_path}': {e}")
@@ -37,30 +38,18 @@ class InventoryManager:
         """
         return self.data
 
-    '''
-    # Exemple d'utilisation si besoin
-    def main():
-        manager = InventoryManager()
-        try:
-            files = ["stocks_department1.csv", "stocks_department2.csv"]
-            consolidated_data = manager.load_csv_files(files)
-            print("Données consolidées :\n", consolidated_data.head())
-        except Exception as e:
-            print(f"Erreur: {e}")
+    def search_by_name(self, name):
+        """
+        Recherche des produits par nom.
+        :param name: Nom partiel ou complet du produit.
+        :return: DataFrame des résultats.
+        """
+        return self.data[self.data['Nom du produit'].astype(str).str.contains(name, case=False, na=False)]
 
-    if __name__ == "__main__":
-        main()
-    '''
-    def search(self, column, value):
+    def search_by_category(self, category):
         """
-        Recherche des produits dans l'inventaire selon un critère.
-        :param column: Nom de la colonne (ex. 'Nom du produit', 'Catégorie').
-        :param value: Valeur à rechercher (ex. 'Produit A', 'Catégorie 1').
-        :return: DataFrame des résultats de recherche.
+        Recherche des produits par catégorie.
+        :param category: Nom de la catégorie.
+        :return: DataFrame des résultats.
         """
-        if column not in self.data.columns:
-            raise ValueError(f"La colonne '{column}' n'existe pas dans les données.")
-        
-        # Filtrer les données selon la valeur spécifiée
-        results = self.data[self.data[column].str.contains(value, case=False, na=False)]
-        return results
+        return self.data[self.data['Categorie'].astype(str).str.contains(category, case=False, na=False)]    
