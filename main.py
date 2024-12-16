@@ -22,9 +22,9 @@ def main():
         print("\nOptions disponibles :")
         print("1. Rechercher par nom du produit")
         print("2. Rechercher par catégorie")
-        print("3. Afficher toutes les données")
-        print("4. Générer un rapport récapitulatif exportable")
-        print("5. Rechercher par prix")
+        print("3. Rechercher par prix")
+        print("4. Afficher toutes les données")
+        print("5. Générer un rapport récapitulatif exportable")
         print("6. Quitter")
         
         choice = input("Choisissez une option : ")
@@ -40,20 +40,8 @@ def main():
             results = manager.search_by_category(category)
             print("\nRésultats de la recherche par catégorie :")
             print(results if not results.empty else "Aucun produit trouvé.")
-        
+
         elif choice == "3":
-            print("\nDonnées consolidées :")
-            print(manager.get_data())
-
-        elif choice == "4":
-            output_file = input("Entrez le nom du fichier pour le rapport (par défaut : rapport_recapitulatif.csv) : ").strip()
-            output_file = output_file if output_file else "rapport_recapitulatif.csv"
-            try:
-                manager.generate_report(output_file)
-            except Exception as e:
-                print(f"Erreur : {e}")
-
-        elif choice == "5":
             min_price = input("Entrez le prix minimum : ")
             max_price = input("Entrez le prix maximum : ")
             try:
@@ -61,6 +49,18 @@ def main():
                 print("\nRésultats de la recherche par plage de prix :")
                 print(results if not results.empty else "Aucun produit trouvé.")
             except ValueError as e:
+                print(f"Erreur : {e}")
+        
+        elif choice == "4":
+            print("\nDonnées consolidées :")
+            print(manager.get_data())
+
+        elif choice == "5":
+            output_file = input("Entrez le nom du fichier pour le rapport (par défaut : rapport_recapitulatif.csv) : ").strip()
+            output_file = output_file if output_file else "rapport_recapitulatif.csv"
+            try:
+                manager.generate_report(output_file)
+            except Exception as e:
                 print(f"Erreur : {e}")
 
         elif choice == "6":
