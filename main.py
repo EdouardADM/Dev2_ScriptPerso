@@ -24,7 +24,8 @@ def main():
         print("2. Rechercher par catégorie")
         print("3. Afficher toutes les données")
         print("4. Générer un rapport récapitulatif exportable")
-        print("5. Quitter")
+        print("5. Rechercher par prix")
+        print("6. Quitter")
         
         choice = input("Choisissez une option : ")
         
@@ -53,6 +54,16 @@ def main():
                 print(f"Erreur : {e}")
 
         elif choice == "5":
+            min_price = input("Entrez le prix minimum : ")
+            max_price = input("Entrez le prix maximum : ")
+            try:
+                results = manager.search_by_price_range(min_price, max_price)
+                print("\nRésultats de la recherche par plage de prix :")
+                print(results if not results.empty else "Aucun produit trouvé.")
+            except ValueError as e:
+                print(f"Erreur : {e}")
+
+        elif choice == "6":
             print("Merci d'avoir utilisé le système de gestion d'inventaire. À bientôt !")
             break
         else:

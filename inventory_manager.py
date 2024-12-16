@@ -3,7 +3,21 @@ import os
 
 class InventoryManager:
     def __init__(self):
-        self.data = pd.DataFrame()
+        self._data = pd.DataFrame()  ##protection de data avec 1 _ 
+
+
+    @property
+    def data(self):
+        """Getter pour accéder aux données."""
+        return self._data
+
+    @data.setter
+    def data(self, new_data):
+        """Setter pour modifier les données avec validation."""
+        if isinstance(new_data, pd.DataFrame):
+            self._data = new_data
+        else:
+            raise ValueError("Les données doivent être un DataFrame pandas.")
 
     def load_csv_files(self, file_paths):
         """
@@ -53,6 +67,24 @@ class InventoryManager:
         :return: DataFrame des résultats.
         """
         return self.data[self.data['Categorie'].astype(str).str.contains(category, case=False, na=False)]    
+
+    def search_by_price_range(self, min_price, max_price):
+        """
+        Recherche des produits dans une plage de prix.
+        :param min_price: Prix minimum (float).
+        :param max_price: Prix maximum (float).
+        :return: DataFrame des résultats.
+        """
+        # Assurez-vous que la colonne Prix est numérique
+        self.data['Prix'] = pd.to_numeric(self.data['Prix'], errors='coerce').fillna(0)
+
+        try:
+            min_price = float(min_price)
+            max_price = float(max_price)
+            return self.data[(self.data['Prix'] >= min_price) & (self.data['Prix'] <= max_price)]
+        except ValueError:
+            raise ValueError("Les prix minimum et maximum doivent être des nombres valides.")
+
 
     def generate_report(self, output_file="rapport_recapitulatif.csv"):
         """
