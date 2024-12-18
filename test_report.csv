@@ -1,0 +1,9 @@
+# Rapport Récapitulatif des Stocks
+Nombre total de produits : 3
+Quantité totale : 600
+Valeur totale des stocks : 706.00 €
+
+# Statistiques par catégorie
+Categorie,Quantite_totale,Valeur_totale
+fruit,300,460.0
+legume,300,245.99999999999997
