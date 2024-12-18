@@ -124,9 +124,3 @@ Pour exécuter les tests :
 ```bash
 python -m unittest discover tests
 ```
-
----
-
-## Licence
-
-Ce projet est sous licence [MIT](https://opensource.org/licenses/MIT).
