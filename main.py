@@ -1,73 +1,57 @@
+import argparse
 from inventory_manager import InventoryManager
 
 def main():
-    print("Bienvenue dans le système de gestion d'inventaire !")
-    
+    # Initialisation du parseur d'arguments
+    parser = argparse.ArgumentParser(description="Système de gestion d'inventaire")
+    parser.add_argument("--files", nargs="*", help="Chemins des fichiers CSV à fusionner", required=True)
+    parser.add_argument("--search-name", metavar="NAME", help="Nom du produit à rechercher")
+    parser.add_argument("--search-category", metavar="CATEGORY", help="Catégorie à rechercher")
+    parser.add_argument("--search-price", nargs=2, metavar=('MIN', 'MAX'), help="Plage de prix à rechercher (min max)")
+    parser.add_argument("--generate-report", metavar="OUTPUT", help="Générer un rapport récapitulatif dans un fichier")
+
+    args = parser.parse_args()
+
     # Initialiser l'InventoryManager
     manager = InventoryManager()
-    
-    # Demander les fichiers CSV à l'utilisateur
-    file_input = input("Entrez les chemins des fichiers CSV à fusionner (séparés par des virgules) : ")
-    file_paths = [file.strip() for file in file_input.split(",")]
 
+    # Charger les fichiers CSV
     try:
-        # Charger et fusionner les fichiers CSV
-        manager.load_csv_files(file_paths)
+        manager.load_csv_files(args.files)
         print("\nDonnées consolidées chargées avec succès.")
     except Exception as e:
-        print(f"Erreur : {e}")
+        print(f"Erreur lors du chargement des fichiers : {e}")
         return
 
-    while True:
-        print("\nOptions disponibles :")
-        print("1. Rechercher par nom du produit")
-        print("2. Rechercher par catégorie")
-        print("3. Rechercher par prix")
-        print("4. Afficher toutes les données")
-        print("5. Générer un rapport récapitulatif exportable")
-        print("6. Quitter")
-        
-        choice = input("Choisissez une option : ")
-        
-        if choice == "1":
-            name = input("Entrez le nom (ou partie du nom) du produit à rechercher : ")
-            results = manager.search_by_name(name)
-            print("\nRésultats de la recherche par nom :")
+    # Recherche par nom
+    if args.search_name:
+        results = manager.search_by_name(args.search_name)
+        print("\nRésultats de la recherche par nom :")
+        print(results if not results.empty else "Aucun produit trouvé.")
+
+    # Recherche par catégorie
+    if args.search_category:
+        results = manager.search_by_category(args.search_category)
+        print("\nRésultats de la recherche par catégorie :")
+        print(results if not results.empty else "Aucun produit trouvé.")
+
+    # Recherche par plage de prix
+    if args.search_price:
+        try:
+            min_price, max_price = map(float, args.search_price)
+            results = manager.search_by_price_range(min_price, max_price)
+            print("\nRésultats de la recherche par plage de prix :")
             print(results if not results.empty else "Aucun produit trouvé.")
-        
-        elif choice == "2":
-            category = input("Entrez la catégorie à rechercher : ")
-            results = manager.search_by_category(category)
-            print("\nRésultats de la recherche par catégorie :")
-            print(results if not results.empty else "Aucun produit trouvé.")
+        except ValueError:
+            print("Erreur : Les prix minimum et maximum doivent être des nombres valides.")
 
-        elif choice == "3":
-            min_price = input("Entrez le prix minimum : ")
-            max_price = input("Entrez le prix maximum : ")
-            try:
-                results = manager.search_by_price_range(min_price, max_price)
-                print("\nRésultats de la recherche par plage de prix :")
-                print(results if not results.empty else "Aucun produit trouvé.")
-            except ValueError as e:
-                print(f"Erreur : {e}")
-        
-        elif choice == "4":
-            print("\nDonnées consolidées :")
-            print(manager.get_data())
-
-        elif choice == "5":
-            output_file = input("Entrez le nom du fichier pour le rapport (par défaut : rapport_recapitulatif.csv) : ").strip()
-            output_file = output_file if output_file else "rapport_recapitulatif.csv"
-            try:
-                manager.generate_report(output_file)
-            except Exception as e:
-                print(f"Erreur : {e}")
-
-        elif choice == "6":
-            print("Merci d'avoir utilisé le système de gestion d'inventaire. À bientôt !")
-            break
-        else:
-            print("Option invalide, veuillez réessayer.")
+    # Génération d'un rapport
+    if args.generate_report:
+        try:
+            manager.generate_report(args.generate_report)
+            print(f"Rapport généré dans : {args.generate_report}")
+        except Exception as e:
+            print(f"Erreur lors de la génération du rapport : {e}")
 
 if __name__ == "__main__":
     main()
