@@ -1,5 +1,6 @@
 import unittest
 import pandas as pd
+import os
 from inventory_manager import InventoryManager
 
 class TestInventoryManager(unittest.TestCase):
@@ -14,12 +15,25 @@ class TestInventoryManager(unittest.TestCase):
             "Prix": [0.82, 1.5, 1.6],
             "Categorie": ["legume", "fruit", "fruit"]
         })
-        self.manager._data = self.sample_data
+        self.manager.data = self.sample_data
+        self.test_csv = "test_inventory.csv"
+
+    def tearDown(self):
+        """Nettoyage après chaque test"""
+        if os.path.exists(self.test_csv):
+            os.remove(self.test_csv)
 
     def test_load_csv_files(self):
         """Test du chargement et de la fusion des fichiers CSV"""
-        # Créez des fichiers CSV temporaires pour ce test si nécessaire
-        pass  # Implémentation simulée
+        # Créez un fichier CSV temporaire
+        with open(self.test_csv, "w", encoding="utf-8") as f:
+            f.write("Id;Nom du produit;Quantite;Prix;Categorie\n")
+            f.write("1;carottes;300;0.82;legume\n")
+            f.write("2;pommes;200;1.5;fruit\n")
+
+        result = self.manager.load_csv_files([self.test_csv])
+        self.assertEqual(len(result), 2)
+        self.assertIn("carottes", result["Nom du produit"].values)
 
     def test_search_by_name(self):
         """Test de la recherche par nom du produit"""
@@ -45,11 +59,13 @@ class TestInventoryManager(unittest.TestCase):
         """Test de la génération de rapport"""
         output_file = "test_report.csv"
         self.manager.generate_report(output_file)
+        self.assertTrue(os.path.exists(output_file))
+
         with open(output_file, "r", encoding="utf-8") as f:
             content = f.read()
         self.assertIn("Nombre total de produits", content)
-        self.assertIn("Quantite_totale", content)
-        self.assertIn("Valeur_totale", content)
+        self.assertIn("Quantité totale", content)
+        self.assertIn("Valeur totale des stocks", content)
 
 if __name__ == "__main__":
     unittest.main()
