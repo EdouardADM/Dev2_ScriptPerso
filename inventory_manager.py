@@ -1,10 +1,10 @@
 import pandas as pd
 import os
 
+
 class InventoryManager:
     def __init__(self):
         self._data = pd.DataFrame()  ##protection de data avec 1 _ 
-
 
     @property
     def data(self):
@@ -66,7 +66,7 @@ class InventoryManager:
         :param category: Nom de la catégorie.
         :return: DataFrame des résultats.
         """
-        return self.data[self.data['Categorie'].astype(str).str.contains(category, case=False, na=False)]    
+        return self.data[self.data['Categorie'].astype(str).str.contains(category, case=False, na=False)]
 
     def search_by_price_range(self, min_price, max_price):
         """
@@ -85,7 +85,6 @@ class InventoryManager:
         except ValueError:
             raise ValueError("Les prix minimum et maximum doivent être des nombres valides.")
 
-
     def generate_report(self, output_file="rapport_recapitulatif.csv"):
         """
         Génère un rapport récapitulatif exportable.
@@ -93,8 +92,8 @@ class InventoryManager:
         """
         if self.data.empty:
             raise ValueError("Aucune donnée chargée pour générer un rapport.")
-        
-         # Convertir les colonnes 'Quantité' et 'Prix' en numérique
+
+        # Convertir les colonnes 'Quantité' et 'Prix' en numérique
         self.data['Quantite'] = pd.to_numeric(self.data['Quantite'], errors='coerce').fillna(0)
         self.data['Prix'] = pd.to_numeric(self.data['Prix'], errors='coerce').fillna(0)
 
